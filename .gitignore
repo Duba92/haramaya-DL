@@ -1,0 +1,10 @@
+/includes/config.local.php
+/uploads/materials/*
+!/uploads/materials/.htaccess
+!/uploads/materials/.gitkeep
+/logs/*
+!/logs/.htaccess
+!/logs/.gitkeep
+/vendor/
+.DS_Store
+Thumbs.db
