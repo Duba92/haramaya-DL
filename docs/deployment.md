@@ -30,6 +30,16 @@
 5. Visit `http://localhost/haramaya-DL/` and sign in with one of the development accounts in the root README.
 6. Run `database/queries.sql` separately in phpMyAdmin's SQL tab to try the retrieval examples.
 
+## Run in Codespaces
+
+This repository includes a development-only Docker Compose stack. Run
+`docker compose up --build -d` from the project root and open forwarded port
+8000. The web container provides Apache, `pdo_mysql`, and `zip`; the MySQL
+container is private to the Compose network and initializes from `schema.sql`.
+Sample uploads and database data use named Docker volumes. Stop with
+`docker compose down`; use `docker compose down -v` only when you want to delete
+all Codespaces development data and start fresh.
+
 If you already created a database from an earlier version of `schema.sql`, back up its records before recreating it. The current script includes account activation, reports, activity, and settings tables that older schemas do not contain.
 
 ## PHP upload limits

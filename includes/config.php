@@ -56,12 +56,10 @@ $databasePort = getenv('DB_PORT') ?: ($localConfiguration['DB_PORT'] ?? '3306');
 $databaseName = getenv('DB_NAME') ?: ($localConfiguration['DB_NAME'] ?? 'digital_library');
 $databaseUser = getenv('DB_USER') ?: ($localConfiguration['DB_USER'] ?? 'root');
 $databasePassword = getenv('DB_PASSWORD') ?: ($localConfiguration['DB_PASSWORD'] ?? '');
-$databaseDsn = sprintf(
-    'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
-    $databaseHost,
-    $databasePort,
-    $databaseName
-);
+$databaseSocket = getenv('DB_SOCKET') ?: ($localConfiguration['DB_SOCKET'] ?? '');
+$databaseDsn = $databaseSocket !== ''
+    ? sprintf('mysql:unix_socket=%s;dbname=%s;charset=utf8mb4', $databaseSocket, $databaseName)
+    : sprintf('mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4', $databaseHost, $databasePort, $databaseName);
 
 try {
     $pdo = new PDO($databaseDsn, $databaseUser, $databasePassword, [

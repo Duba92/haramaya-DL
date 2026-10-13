@@ -14,6 +14,7 @@ haramaya-DL/
 |   |-- images/               Logos and other static images
 |   `-- js/                   Browser-side JavaScript
 |-- database/                 SQL schema and sample data
+|-- docker/                   PHP runtime and upload settings for Codespaces
 |-- docs/                     Deployment, user, architecture, and test guides
 |-- includes/                 Shared PHP configuration, helpers, and layout
 |-- instructor/               Instructor dashboard and upload pages
@@ -21,6 +22,7 @@ haramaya-DL/
 |-- about.php                 About page
 |-- browse.php                Curriculum hierarchy browser
 |-- contact.php               Library contact information
+|-- compose.yaml              Codespaces PHP/MySQL development stack
 |-- course.php                Course details and materials
 |-- download.php              Authenticated material download handler
 |-- help.php                  Student and instructor help
@@ -45,6 +47,7 @@ haramaya-DL/
 - `assets/css/`, `assets/js/`, and `assets/images/` hold browser styles, scripts, and local images.
 - `database/` holds the MySQL schema, sample data, and separate query examples.
 - `docs/` contains deployment instructions, role manuals, architecture notes, and test plans.
+- `docker/` contains the Codespaces PHP image and upload limits.
 - `includes/` holds shared PHP configuration, authentication, helpers, and page templates.
 - `instructor/` contains instructor dashboards and material upload/edit/list pages.
 - `logs/` is reserved for private application logs; generated logs are excluded from Git.
@@ -56,6 +59,12 @@ haramaya-DL/
 
 The project targets PHP 8+, MySQL, and Apache, and can be developed with XAMPP.
 Place the project directory under XAMPP's `htdocs` directory.
+
+For this Codespaces workspace, start the included PHP/MySQL development stack
+with `docker compose up --build -d`, then open the forwarded port 8000. The
+database is initialized from `database/schema.sql` on its first start. Stop the
+services with `docker compose down`; `docker compose down -v` also deletes the
+development database, uploaded files, and logs.
 
 ## Database setup
 

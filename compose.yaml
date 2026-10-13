@@ -1,0 +1,51 @@
+services:
+  database:
+    image: mysql:8.4
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: digital_library
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - mysql_socket:/var/run/mysqld
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "--silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      APP_ENV: development
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_NAME: digital_library
+      DB_USER: root
+      DB_PASSWORD: ""
+      DB_SOCKET: /var/run/mysqld/mysqld.sock
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - material_files:/var/www/html/uploads/materials
+      - ./uploads/materials/.htaccess:/var/www/html/uploads/materials/.htaccess:ro
+      - application_logs:/var/www/html/logs
+      - ./logs/.htaccess:/var/www/html/logs/.htaccess:ro
+      - mysql_socket:/var/run/mysqld
+    command: >-
+      bash -lc "chown www-data:www-data /var/www/html/uploads/materials /var/www/html/logs
+      && find /var/www/html/uploads/materials -mindepth 1 ! -name .htaccess -exec chown -R www-data:www-data {} +
+      && find /var/www/html/logs -mindepth 1 ! -name .htaccess -exec chown -R www-data:www-data {} +
+      && apache2-foreground"
+
+volumes:
+  mysql_data:
+  mysql_socket:
+  material_files:
+  application_logs:
